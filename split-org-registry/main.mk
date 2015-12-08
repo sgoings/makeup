@@ -1,0 +1,18 @@
+#
+# INPUTS
+# 	- VERSION
+#
+# OUTPUTS
+# 	- ORG_PREFIX
+#		- IMAGE
+#
+
+ORG_PREFIX ?= deis
+
+ifeq ($(VERSION),latest)
+	ORG_PREFIX := $(ORG_PREFIX)ci/
+else
+	ORG_PREFIX := $(ORG_PREFIX)/
+endif
+
+IMAGE := $(ORG_PREFIX)$(PROJECT_NAME):$(VERSION)

@@ -1,0 +1,2 @@
+  docker-build    build docker image
+  docker-push     push docker images to registries
