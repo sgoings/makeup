@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+MAKEUP_DEFAULT_VERSION="master"
+MAKEUP_DEFAULT_CONVENTION="deis"
+MAKEUP_DIR=".makeup"
+
+function usage {
+  cat <<EOF
+makeup improves makefiles
+
+commands:
+
+  install       load makeup into the current project
+
+EOF
+}
+
+function install {
+  prompt "What version of makeup would you like to inject into this project?" MAKEUP_VERSION "${MAKEUP_DEFAULT_VERSION}"
+  prompt "What conventions would you like this project to adhere to?" MAKEUP_CONVENTIONS "${MAKEUP_DEFAULT_CONVENTION}"
+
+  if ! git submodule | grep -q .makeup &> /dev/null; then
+    echo "$(pwd) : adding makeup"
+    git submodule add -b "${MAKEUP_VERSION}" -f git@github.com:sgoings/makeup.git ${MAKEUP_DIR}
+  else
+    echo "$(pwd) : makeup already exists"
+  fi
+
+  echo "$(pwd) : updating makeup"
+  git submodule update --init --recursive --remote
+
+  add-makeup-include
+  inject-makefile-hook
+}
+
+function add-makeup-include {
+  cat > makeup.mk <<EOF
+MAKEUP_DIR := .makeup
+
+SUBMODULE_UPDATE := \$(shell git submodule update --init)
+EOF
+}
+
+function inject-makefile-hook {
+  if cat Makefile | grep -q "# begin makeup managed" &> /dev/null; then
+    echo "$(pwd) : makeup already injected into this project"
+  else
+    echo "$(pwd) : injecting makeup load script into makefile"
+    local inject_string="$(cat <<EOF
+# begin makeup managed
+include makeup.mk
+include \$(MAKEUP_DIR)/conventions/${MAKEUP_DEFAULT_CONVENTION}/main.mk
+# end makeup managed
+
+EOF
+)"
+
+    echo "${inject_string}" | cat - Makefile > Makefile.makeuptmp && mv Makefile.makeuptmp Makefile
+  fi
+}
+
+function skip-prompt-if-set {
+  local variable="${1}"
+  local sanitize="${2:-false}"
+
+  if [ ! -z ${!variable:-} ]; then
+    echo "${variable} already set to ${!variable}. Skipping prompt."
+    return 1
+  else
+    return 0
+  fi
+}
+
+function prompt {
+  local question="${1}"
+  local return_var="${2}"
+  local default="${3:-}"
+
+  skip-prompt-if-set ${return_var} || return 0
+
+  local input
+
+  while [ -z "${input:-}" ]; do
+
+    if [ -z ${default} ]; then
+      echo "--> ${question} ${return_var} (no default)"
+    else
+      echo "--> ${question} ${return_var} [ ${default} ]"
+    fi
+
+    read input
+
+    [ -n "${default}" ] && break
+
+  done
+
+  eval "export ${return_var}=${input:-${default}}"
+
+  echo "You chose: ${!return_var}"
+}
+
+if [ -z ${1} ]; then
+  usage
+else
+  ${1}
+fi
