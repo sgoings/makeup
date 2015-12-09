@@ -24,6 +24,11 @@ Quickstart
 
 4. Makeup will ask you a few questions, and set your project up!
 
+Demo
+----
+
+[![asciicast](https://asciinema.org/a/31535.png)](https://asciinema.org/a/31535)
+
 Why the name?
 -------------
 makeup makes make making easier!
