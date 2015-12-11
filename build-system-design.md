@@ -99,6 +99,8 @@ Essentially what we're building here is a way to share common makefile logic usi
 
 Let me show you something...
 
-Show makeup backends (main.mk)
-Show what it looks like integrated with a project
-Show what it looks like to bootstrap a project
+[makeup](https://github.com/sgoings/makeup) - when you want to have beautiful makefiles
+
+- Show makeup backends (main.mk)
+- Show what it looks like integrated with a project
+- Show what it looks like to bootstrap a project
