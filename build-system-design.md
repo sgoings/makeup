@@ -12,7 +12,7 @@ Existing Problems
   - kubectl
   - docker-machine
   - helm
-- there's generally an opinion that we have a "high" barrier to entry
+- there's generally an opinion that we have a "higher-than-we-should" barrier to entry
 
 Leading Questions
 ====
@@ -33,9 +33,9 @@ Visionquest
 - same yaml you use locally on your laptop is executed in CI
 
 Design:
+  - `wercker dev` - your quick dev/test local workflow (subset of build)
   - `wercker build` - what you run when you want to create a deployable
   - `wercker deploy` - how you send your docker image out into the wild
-  - `wercker dev` - your quick dev/test local workflow (subset of build)
 
 Show (wercker.yml) and Demo Wercker
 
@@ -104,3 +104,21 @@ Let me show you something...
 - Show makeup backends (main.mk)
 - Show what it looks like integrated with a project
 - Show what it looks like to bootstrap a project
+
+### My End Game
+
+- get some really good + usable conventions for the Deis + Helm project:
+  - building a simple go project with glide and our supporting tools (lint, gofmt, etc)
+  - publishing this to bintray
+  - publishing Docker images to multiple sources
+  - containerized build environment options for ^^ (so you can choose if you want, but you're not forced to)
+- these conventions + plugins help us transform our prototype repo from a "model" to a "foundation"
+- have this catch on as a tool that the Go community is drawn to as a way to handle nontrivial project builds
+  - compelling: git + make = only prerequisites
+    - bootstrapping + git submodule/repo tool could (and should) be written in Go
+
+### Potential Questions
+
+- how do we inject things into makefiles before some of the auto-created targets (we can create lifecycle hooks)
+- how can someone start building their own plugins? We're not there yet, but my idea is that the makeup utility could handle the versioning for you + multiple git submodule management for you... or we might find that we should be building a solution like helm offers
+-
