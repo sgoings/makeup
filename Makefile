@@ -1,5 +1,5 @@
-include ../makeup-kit-info/main.mk
-include ../makeup-kit-go-cli/main.mk
+include .makeup/makeup-kit-info/main.mk
+include .makeup/makeup-kit-go-cli/main.mk
 
 # OVERRIDES
 GO_CLI_SRC_PACKAGES := . ./cmd
