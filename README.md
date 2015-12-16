@@ -10,19 +10,29 @@ Quickstart
   git clone https://github.com/sgoings/makeup.git
   ```
 
-2. Change to the directory that holds the project you want to add makeup into
+2. Install `makeup` into your PATH
+
+  ```
+  make install
+  ```
+
+3. Change to the directory that holds the project you want to add `makeup` into
 
   ```
   cd <project directory> # this project must already be using git for version control
   ```
 
-3. Run the makeup install command
+4. Run the init command
 
   ```
-  ${makeup directory}/makeup install
+  makeup init
   ```
 
-4. Makeup will ask you a few questions, and set your project up!
+5. Add makeup kits using the `add` command (uses similar syntax as `go get`)
+
+  ```
+  makeup add github.com/sgoings/makeup-kit-info
+  ```
 
 Demo
 ----
@@ -31,4 +41,5 @@ Demo
 
 Why the name?
 -------------
-makeup makes make making easier!
+
+makeup helps you create prettier makefiles

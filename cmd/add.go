@@ -16,9 +16,46 @@ package cmd
 
 import (
 	"fmt"
+	"os/exec"
+	"strings"
+	"log"
+	"path"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 )
+
+func GetKitName(repo_url string) string {
+	repo_basename := path.Base(repo_url)
+	return strings.TrimSuffix(repo_basename, filepath.Ext(repo_basename))
+}
+
+func KitExists(repo_name string) bool {
+	cmd, err := exec.Command("git", "submodule", "status").Output()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if strings.Contains(string(cmd), repo_name) {
+		return true
+	}
+	return false
+}
+
+func AddSubmodule(repo_path string) {
+	repo_name := GetKitName(repo_path)
+
+	if KitExists(repo_name) {
+		log.Printf("[DEBUG] git submodule %s already exists!", repo_name)
+	} else {
+		url := fmt.Sprint("https://", repo_path, ".git")
+		path := fmt.Sprint(".makeup/", repo_name)
+		err := exec.Command("git", "submodule", "add", url, path)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+}
 
 // addCmd represents the add command
 var addCmd = &cobra.Command{
@@ -26,8 +63,9 @@ var addCmd = &cobra.Command{
 	Short: "Add a makeup kit to this project",
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Println("add called")
+		if len(args) == 1 {
+			AddSubmodule(args[0])
+		}
 	},
 }
 

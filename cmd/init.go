@@ -15,10 +15,53 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
+	"os"
 
 	"github.com/spf13/cobra"
 )
+
+func WriteMakeupIncludeLines() {
+	file, err := os.Create("Makefile")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer file.Close()
+
+	include_script := `MAKEUP_DIR := .makeup
+
+SUBMODULE_UPDATE := \$(shell git submodule update --init --recursive)
+
+`
+
+	num_bytes, err := file.WriteString(include_script)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("wrote %d bytes to makeup.mk script", num_bytes)
+}
+
+func WriteMakeupBootstrapFile() {
+	file, err := os.Create("makeup.mk")
+	if err != nil {
+    log.Fatal(err)
+  }
+
+  defer file.Close()
+
+	include_script := `MAKEUP_DIR := .makeup
+
+SUBMODULE_UPDATE := \$(shell git submodule update --init --recursive)
+
+`
+
+	num_bytes, err := file.WriteString(include_script)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("wrote %d bytes to makeup.mk script", num_bytes)
+}
 
 // initCmd represents the init command
 var initCmd = &cobra.Command{
@@ -26,8 +69,8 @@ var initCmd = &cobra.Command{
 	Short: "Initialize makeup, creating a makeup.yaml file",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Println("init called")
+		WriteMakeupBootstrapFile()
+		WriteMakeupIncludeLines()
 	},
 }
 

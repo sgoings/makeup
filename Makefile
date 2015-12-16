@@ -1,3 +1,4 @@
+include makeup.mk
 include .makeup/makeup-kit-info/main.mk
 include .makeup/makeup-kit-go-cli/main.mk
 
