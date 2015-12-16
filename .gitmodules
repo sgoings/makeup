@@ -2,3 +2,6 @@
 	path = .makeup/makeup-kit-go-cli
 	url = https://github.com/sgoings/makeup-kit-go-cli.git
 
+[submodule ".makeup/makeup-kit-info"]
+	path = .makeup/makeup-kit-info
+	url = https://github.com/sgoings/makeup-kit-info.git
