@@ -1,4 +1,7 @@
+# makeup-managed:begin
 include makeup.mk
+# makeup-managed:end
+
 include .makeup/makeup-kit-info/main.mk
 include .makeup/makeup-kit-go-cli/main.mk
 

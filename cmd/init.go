@@ -17,50 +17,51 @@ package cmd
 import (
 	"log"
 	"os"
+	"io/ioutil"
+	"fmt"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
 
-func WriteMakeupIncludeLines() {
-	file, err := os.Create("Makefile")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer file.Close()
-
-	include_script := `MAKEUP_DIR := .makeup
-
-SUBMODULE_UPDATE := \$(shell git submodule update --init --recursive)
+var include_lines = `# makeup-managed:begin
+include makeup.mk
+# makeup-managed:end
 
 `
 
-	num_bytes, err := file.WriteString(include_script)
-	if err != nil {
-		log.Fatal(err)
+var makeupmk_contents = `# makeup-managed:begin
+MAKEUP_DIR := .makeup
+
+SUBMODULE_UPDATE := \$(shell git submodule update --init --recursive)
+# makeup-managed:end
+`
+
+func safePrependWrite(filename string, ensure_contents string) {
+	var orig string
+
+	if _, err := os.Stat(filename); err == nil {
+		orig_contents, err := ioutil.ReadFile(filename)
+		if err != nil {
+			log.Fatal(err)
+		}
+		orig = string(orig_contents)
 	}
-	log.Printf("wrote %d bytes to makeup.mk script", num_bytes)
+
+	if ! strings.Contains(orig, strings.TrimSpace(ensure_contents)) {
+		output := fmt.Sprint(ensure_contents, orig)
+		ioutil.WriteFile(filename, []byte(output), 0644)
+	}
 }
 
-func WriteMakeupBootstrapFile() {
-	file, err := os.Create("makeup.mk")
-	if err != nil {
-    log.Fatal(err)
-  }
+func WriteMakeupIncludeLines(makefile string) {
+	safePrependWrite(makefile, include_lines)
+	log.Printf("[INFO] injection logic: %s\n", makefile)
+}
 
-  defer file.Close()
-
-	include_script := `MAKEUP_DIR := .makeup
-
-SUBMODULE_UPDATE := \$(shell git submodule update --init --recursive)
-
-`
-
-	num_bytes, err := file.WriteString(include_script)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("wrote %d bytes to makeup.mk script", num_bytes)
+func WriteMakeupBootstrapFile(makeup_bootstrap_file string) {
+	safePrependWrite(makeup_bootstrap_file, makeupmk_contents)
+	log.Printf("[INFO] bootstrap file: %s\n", makeup_bootstrap_file)
 }
 
 // initCmd represents the init command
@@ -69,8 +70,8 @@ var initCmd = &cobra.Command{
 	Short: "Initialize makeup, creating a makeup.yaml file",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		WriteMakeupBootstrapFile()
-		WriteMakeupIncludeLines()
+		WriteMakeupBootstrapFile("makeup.mk")
+		WriteMakeupIncludeLines("Makefile")
 	},
 }
 
