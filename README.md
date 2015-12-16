@@ -1,6 +1,8 @@
 makeup
 ======
 
+[![Build Status](https://travis-ci.org/sgoings/makeup.svg?branch=master)](https://travis-ci.org/sgoings/makeup)
+
 Quickstart
 ----------
 
