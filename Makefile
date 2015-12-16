@@ -2,10 +2,10 @@
 include makeup.mk
 # makeup-managed:end
 
-include .makeup/makeup-kit-info/main.mk
 include .makeup/makeup-kit-go-cli/main.mk
 
 # OVERRIDES
+PROJECT_NAME := makeup
 GO_CLI_SRC_PACKAGES := . ./cmd
 GO_CLI_ORG_NAME := deis
 

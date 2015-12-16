@@ -31,12 +31,12 @@ func GetKitName(repo_url string) string {
 }
 
 func KitExists(repo_name string) bool {
-	cmd, err := exec.Command("git", "submodule", "status").Output()
+	output, err := exec.Command("git", "submodule", "status").CombinedOutput()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("[ERROR] git submodule status failed with:\n%s\n", output)
 	}
 
-	if strings.Contains(string(cmd), repo_name) {
+	if strings.Contains(string(output), repo_name) {
 		return true
 	}
 	return false
@@ -50,9 +50,9 @@ func AddSubmodule(repo_path string) {
 	} else {
 		url := fmt.Sprint("https://", repo_path, ".git")
 		path := fmt.Sprint(".makeup/", repo_name)
-		err := exec.Command("git", "submodule", "add", url, path)
+		output, err := exec.Command("git", "submodule", "add", url, path).CombinedOutput()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("[ERROR] git submodule add failed with:\n%s\n", output)
 		}
 	}
 }
