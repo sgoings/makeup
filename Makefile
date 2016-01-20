@@ -24,3 +24,8 @@ fmt: go-cli-fmt
 test-style: fmt lint vet
 
 install: go-cli-install
+
+update: glide-update
+
+glide-update:
+	glide update
