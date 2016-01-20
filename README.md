@@ -6,7 +6,7 @@ makeup
 Quickstart
 ----------
 
-1. Clone this repository
+1. Clone this repository into `$GOPATH/src/deis`
 
   ```
   git clone https://github.com/sgoings/makeup.git
