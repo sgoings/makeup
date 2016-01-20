@@ -50,6 +50,8 @@ Quickstart
   include .makeup/makeup-bag-deis/info.mk
   ```
 
+7. Run `make info`!
+
 Demo
 ----
 
