@@ -61,7 +61,11 @@ func listMakefileVars(path string) {
 		os.Exit(1)
 	}
 	for _, variable := range vars {
-		fmt.Println(variable.name)
+		if variable.description != "" {
+			fmt.Println(variable.name, " - ", variable.description)
+		} else {
+			fmt.Println(variable.name)
+		}
 	}
 }
 

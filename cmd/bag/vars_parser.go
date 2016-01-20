@@ -13,7 +13,8 @@ var (
 )
 
 type variable struct {
-	name string
+	name        string
+	description string
 }
 
 func parseVars(reader io.Reader) ([]variable, error) {
@@ -33,7 +34,13 @@ func parseVars(reader io.Reader) ([]variable, error) {
 			continue
 		}
 		remainder := line[len(varListPrefix):]
-		ret = append(ret, variable{name: remainder})
+		spl := strings.Split(remainder, ": ")
+		newVar := variable{}
+		newVar.name = spl[0]
+		if len(spl) > 1 {
+			newVar.description = spl[1]
+		}
+		ret = append(ret, newVar)
 	}
 	return ret, nil
 }
