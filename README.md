@@ -35,6 +35,20 @@ Quickstart
   ```
   makeup add github.com/sgoings/makeup-bag-deis
   ```
+  
+6. In your Makefile, you'll see:
+
+  ```
+  # makeup-managed:begin
+  include makeup.mk
+  # makeup-managed:end
+  ```
+  
+  Add the following below that section:
+  
+  ```
+  include .makeup/makeup-bag-deis/info.mk
+  ```
 
 Demo
 ----
