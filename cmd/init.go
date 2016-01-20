@@ -20,6 +20,7 @@ import (
 	"io/ioutil"
 	"fmt"
 	"strings"
+	"os/exec"
 
 	"github.com/spf13/cobra"
 )
@@ -64,6 +65,15 @@ func WriteMakeupBootstrapFile(makeup_bootstrap_file string) {
 	log.Printf("[INFO] bootstrap file: %s\n", makeup_bootstrap_file)
 }
 
+func UpdateSubmodules() {
+	cmd := exec.Command("git", "submodule", "update", "--remote")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		log.Fatal(err)
+	}
+}
+
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
@@ -72,6 +82,7 @@ var initCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		WriteMakeupBootstrapFile("makeup.mk")
 		WriteMakeupIncludeLines("Makefile")
+		UpdateSubmodules()
 	},
 }
 
