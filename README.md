@@ -33,7 +33,7 @@ Quickstart
 5. Add makeup kits using the `add` command (uses similar syntax as `go get`)
 
   ```
-  makeup add github.com/sgoings/makeup-kit-info
+  makeup add github.com/sgoings/makeup-bag-deis
   ```
 
 Demo
