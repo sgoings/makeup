@@ -16,11 +16,11 @@ package cmd
 
 import (
 	"fmt"
-	"os/exec"
-	"strings"
 	"log"
+	"os/exec"
 	"path"
 	"path/filepath"
+	"strings"
 
 	"github.com/deis/makeup/cmd/bag"
 	"github.com/spf13/cobra"
@@ -62,7 +62,7 @@ func AddSubmodule(repo_path string) {
 var addCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Add a makeup kit to this project",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 1 {
 			AddSubmodule(args[0])
