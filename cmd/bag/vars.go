@@ -37,7 +37,46 @@ var varsCmd = &cobra.Command{
 }
 
 func listBagVars(path string) {
-	log.Printf("listing vars for bag %s", path)
+	makefiles := make(map[string][]variable)
+	makefileErrs := make(map[string]error)
+	spl := strings.Split(path, "/")
+	if len(spl) != 3 {
+		log.Printf("[ERROR] bag path %s is invalid", path)
+		os.Exit(1)
+	}
+	bagName := spl[len(spl)-1]
+	relPath := filepath.Join(SubmoduleDir, bagName)
+	err := filepath.Walk(relPath, func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() && filepath.Base(path) == ".git" {
+			return filepath.SkipDir
+		} else if filepath.Base(path) == ".git" || info.IsDir() {
+			return nil
+		}
+
+		fd, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer fd.Close()
+		vars, err := parseVars(fd)
+		if err != nil {
+			makefileErrs[path] = err
+		} else {
+			makefiles[path] = vars
+		}
+		return nil
+	})
+	if err != nil && err != filepath.SkipDir {
+		log.Printf("[ERROR] walking the bag directory (%s)", err)
+		os.Exit(1)
+	}
+
+	for makefileName, vars := range makefiles {
+		fmt.Println("-- ", filepath.Base(makefileName), " --")
+		for _, v := range vars {
+			fmt.Println(v.String())
+		}
+	}
 }
 
 func listMakefileVars(path string) {
@@ -61,11 +100,7 @@ func listMakefileVars(path string) {
 		os.Exit(1)
 	}
 	for _, variable := range vars {
-		if variable.description != "" {
-			fmt.Println(variable.name, " - ", variable.description)
-		} else {
-			fmt.Println(variable.name)
-		}
+		fmt.Println(variable.String())
 	}
 }
 

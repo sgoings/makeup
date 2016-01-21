@@ -3,6 +3,7 @@ package bag
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"io"
 	"strings"
 )
@@ -15,6 +16,13 @@ var (
 type variable struct {
 	name        string
 	description string
+}
+
+func (v variable) String() string {
+	if v.description != "" {
+		return fmt.Sprintf("%s - %s", v.name, v.description)
+	}
+	return v.name
 }
 
 func parseVars(reader io.Reader) ([]variable, error) {
