@@ -16,12 +16,13 @@ package cmd
 
 import (
 	"fmt"
-	"os/exec"
-	"strings"
 	"log"
+	"os/exec"
 	"path"
 	"path/filepath"
+	"strings"
 
+	"github.com/deis/makeup/cmd/bag"
 	"github.com/spf13/cobra"
 )
 
@@ -49,7 +50,7 @@ func AddSubmodule(repo_path string) {
 		log.Printf("[DEBUG] git submodule %s already exists!", repo_name)
 	} else {
 		url := fmt.Sprint("https://", repo_path, ".git")
-		path := fmt.Sprint(".makeup/", repo_name)
+		path := fmt.Sprint(bag.SubmoduleDir, "/", repo_name)
 		output, err := exec.Command("git", "submodule", "add", url, path).CombinedOutput()
 		if err != nil {
 			log.Fatalf("[ERROR] git submodule add failed with:\n%s\n", output)
@@ -61,7 +62,7 @@ func AddSubmodule(repo_path string) {
 var addCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Add a makeup kit to this project",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 1 {
 			AddSubmodule(args[0])
