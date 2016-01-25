@@ -1,4 +1,4 @@
-// Copyright © 2015 NAME HERE <EMAIL ADDRESS>
+// Copyright © 2016 NAME HERE <EMAIL ADDRESS>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,33 +15,42 @@
 package cmd
 
 import (
-	"fmt"
-
+	"log"
+	"os"
+	"os/exec"
 	"github.com/spf13/cobra"
 )
 
-// statusCmd represents the status command
-var statusCmd = &cobra.Command{
-	Use:   "status",
-	Short: "explains how makeup is operating in this repo",
+// updateCmd represents the update command
+var updateCmd = &cobra.Command{
+	Use:   "update",
+	Short: "update all makeup bags",
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Println("status called")
+		UpdateSubmodules()
 	},
 }
 
+func UpdateSubmodules() {
+	cmd := exec.Command("git", "submodule", "update", "--remote")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		log.Fatal(err)
+	}
+}
+
 func init() {
-	RootCmd.AddCommand(statusCmd)
+	RootCmd.AddCommand(updateCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// statusCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// updateCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// statusCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// updateCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 }
