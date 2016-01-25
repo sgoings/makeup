@@ -60,7 +60,7 @@ func AddSubmodule(repo_path string) {
 // addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:   "add",
-	Short: "Add a makeup kit to this project",
+	Short: "Add a makeup bag to this project",
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 1 {
