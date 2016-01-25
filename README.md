@@ -6,7 +6,7 @@ makeup
 Quickstart
 ----------
 
-1. Clone this repository
+1. Clone this repository into `$GOPATH/src/deis`
 
   ```
   git clone https://github.com/sgoings/makeup.git
@@ -33,8 +33,24 @@ Quickstart
 5. Add makeup kits using the `add` command (uses similar syntax as `go get`)
 
   ```
-  makeup add github.com/sgoings/makeup-kit-info
+  makeup add github.com/sgoings/makeup-bag-deis
   ```
+  
+6. In your Makefile, you'll see:
+
+  ```
+  # makeup-managed:begin
+  include makeup.mk
+  # makeup-managed:end
+  ```
+  
+  Add the following below that section:
+  
+  ```
+  include .makeup/makeup-bag-deis/info.mk
+  ```
+
+7. Run `make info`!
 
 Demo
 ----
