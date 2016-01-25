@@ -15,7 +15,7 @@ BINTRAY_REPO := sgoings
 BINTRAY_PACKAGE_NAME := makeup
 BINTRAY_ORG := makeup
 BINTRAY_INCLUDE_PATTERN := bin/makeup
-BINTRAY_UPLOAD_PATTERN := makeup
+BINTRAY_UPLOAD_PATTERN := makeup-$(VERSION)
 
 build: go-cli-build
 
